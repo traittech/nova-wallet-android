@@ -113,7 +113,7 @@ class RealAddTokensInteractor(
         val type = if (isEthereumBased) {
             Chain.Asset.Type.EvmErc20(customToken.tokenId)
         } else {
-            Chain.Asset.Type.Statemine(customToken.tokenId.asGsonParsedNumber(), null)
+            Chain.Asset.Type.Statemine(customToken.tokenId.asGsonParsedNumber(), "assets")
         }
 
         val id = if (isEthereumBased) {
