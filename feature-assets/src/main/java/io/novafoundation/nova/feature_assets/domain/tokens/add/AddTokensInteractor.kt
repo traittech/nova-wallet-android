@@ -4,6 +4,7 @@ import io.novafoundation.nova.common.address.format.EthereumAddressFormat
 import io.novafoundation.nova.common.data.network.runtime.binding.cast
 import io.novafoundation.nova.common.data.network.runtime.binding.getTyped
 import io.novafoundation.nova.common.data.network.runtime.binding.returnType
+import io.novafoundation.nova.common.utils.asGsonParsedNumber
 import io.novafoundation.nova.common.utils.assets
 import io.novafoundation.nova.common.validation.ValidationSystem
 import io.novafoundation.nova.feature_assets.domain.tokens.add.validations.AddCustomTokenValidationSystem
@@ -49,7 +50,7 @@ interface AddTokensInteractor {
         tokenId: String
     ): TokenMetadata?
 
-    suspend fun addCustomTokenAndSync(customToken: CustomToken): Result<*>
+    suspend fun addCustomTokenAndSync(customToken: CustomToken, isEthereumBased: Boolean): Result<*>
 
     fun getValidationSystem(isEthereumBased: Boolean): AddCustomTokenValidationSystem
 }
@@ -106,19 +107,31 @@ class RealAddTokensInteractor(
         }.getOrNull()
     }
 
-    override suspend fun addCustomTokenAndSync(customToken: CustomToken): Result<*> = runCatching {
+    override suspend fun addCustomTokenAndSync(customToken: CustomToken, isEthereumBased: Boolean): Result<*> = runCatching {
         val priceId = coinGeckoLinkParser.parse(customToken.priceLink).getOrNull()?.priceId
+
+        val type = if (isEthereumBased) {
+            Chain.Asset.Type.EvmErc20(customToken.tokenId)
+        } else {
+            Chain.Asset.Type.Statemine(customToken.tokenId.asGsonParsedNumber(), null)
+        }
+
+        val id = if (isEthereumBased) {
+            chainAssetIdOfErc20Token(customToken.tokenId)
+        } else {
+            customToken.tokenId.toInt()
+        }
 
         val asset = Chain.Asset(
             iconUrl = null,
-            id = chainAssetIdOfErc20Token(customToken.tokenId),
+            id = id,
             priceId = priceId,
             chainId = customToken.chainId,
             symbol = customToken.symbol,
             precision = customToken.decimals,
             buyProviders = emptyMap(),
             staking = emptyList(),
-            type = Chain.Asset.Type.EvmErc20(customToken.tokenId),
+            type = type,
             source = Chain.Asset.Source.MANUAL,
             name = customToken.symbol,
             enabled = true

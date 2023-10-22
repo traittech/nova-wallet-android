@@ -102,8 +102,8 @@ class AddTokenEnterInfoViewModel(
                 interactor.retrieveContractMetadata(payload.chainId, contractAddress)
             }
             .onEach { contractMetadata ->
-                contractMetadata?.decimals?.let { decimalsInput.value = it.toString() }
-                contractMetadata?.symbol?.let { symbolInput.value = it }
+                decimalsInput.value = contractMetadata?.decimals?.toString() ?: ""
+                symbolInput.value = contractMetadata?.symbol ?: ""
             }
             .launchIn(viewModelScope)
     }
@@ -134,15 +134,15 @@ class AddTokenEnterInfoViewModel(
                 progressConsumer = addingInProgressFlow.progressConsumer(),
                 validationFailureTransformer = { mapAddEvmTokensValidationFailureToUI(resourceManager, it) }
             ) {
-                performAddToken(it.customToken)
+                performAddToken(it.customToken, it.chain.isEthereumBased)
             }
         }
     }
 
-    private fun performAddToken(customToken: CustomToken) {
+    private fun performAddToken(customToken: CustomToken, isEthereumBased: Boolean) {
         launch {
             runCatching {
-                interactor.addCustomTokenAndSync(customToken)
+                interactor.addCustomTokenAndSync(customToken, isEthereumBased)
             }.onSuccess {
                 addingInProgressFlow.value = false
                 router.finishAddTokenFlow()
