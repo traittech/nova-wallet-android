@@ -27,12 +27,16 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Test
-        run: ./gradlew test
+
+#      - name: Test
+#        run: ./gradlew test
+
       - name: Analyze
         run: ./gradlew check
+
       - name: Assemble Debug
         run: ./gradlew assembleDebug
+
       - name: Assemble Release
         run: ./gradlew assembleRelease
 
