@@ -25,27 +25,27 @@ on:
         default: "false"
     secrets:
       ACALA_PROD_AUTH_TOKEN:
-        required: true
+        required: false
       ACALA_TEST_AUTH_TOKEN:
-        required: true
+        required: false
       MOONBEAM_PROD_AUTH_TOKEN:
-        required: true
+        required: false
       MOONBEAM_TEST_AUTH_TOKEN:
-        required: true
+        required: false
       MOONPAY_PRODUCTION_SECRET:
-        required: true
+        required: false
       MOONPAY_TEST_SECRET:
-        required: true
+        required: false
       EHTERSCAN_API_KEY_MOONBEAM:
-        required: true
+        required: false
       EHTERSCAN_API_KEY_MOONRIVER:
-        required: true
+        required: false
       EHTERSCAN_API_KEY_ETHEREUM:
-        required: true
+        required: false
       INFURA_API_KEY:
-        required: true
+        required: false
       WALLET_CONNECT_PROJECT_ID:
-        required: true
+        required: false
       # Special secrets for signing:
       CI_MARKET_KEYSTORE_PASS:
         required: false

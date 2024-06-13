@@ -40,5 +40,5 @@ jobs:
         with:
           name: 'ANDROID_APP_VERSION'
           value: ${{ env.GRADLE_APP_VERSION }}
-          repository: novasamatech/nova-wallet-android
+          repository: traittech/nova-wallet-android
           token: ${{ secrets.WRITE_SECRET_PAT }}
